@@ -3,7 +3,6 @@ from enum import Enum
 import asyncio
 import websockets
 
-
 class Instructions(Enum):
     START = "[START]"
     STOP = "[STOP]"
@@ -12,11 +11,15 @@ class Instructions(Enum):
     RIGHT = "[RIGHT]"
     LEFT = "[LEFT]"
     MOVE = "[MOVE] "
-    IGNORED =["[DEBUG]","[ERROR]"]
+    IGNORED = ["[DEBUG]", "[ERROR]"]
 
 
-async def echo(websocket):
+
+async def echo(websocket, path):
     async for message in websocket:
+        if Instructions.STOP in message:
+            print("Ending webscoket server")
+            break
         print(f"Received from client: {message}")
         response = f"Echo: {message}"
         await websocket.send(response)
@@ -29,8 +32,9 @@ async def main(port_id):
 
 
 if __name__ == "__main__":
+    print("SCRIPT STARTED")
     if len(sys.argv) > 1:
-        port = sys.argv[1]
+        port = int(sys.argv[1])
         print(port)
         asyncio.run(main(port))
     else:

@@ -2,10 +2,17 @@ extends Node
 
 class_name Player
 
-func _init(id:int, port:int, exec_path:String):
-	self.id = id
+var player_id: int
+var port: int
+var exec_path: String
+var arguments: Array
+
+func _init(id:int, port:int, exec_path:String, argument:Array):
+	self.player_id = id
 	self.port = port
-	self.path = exec_path
+	self.exec_path = exec_path
+	self.arguments = argument
+	self.arguments.append(port)
 
 
 @onready var body:Array = []
@@ -31,5 +38,10 @@ func send_output(output):
 	socket.send(output)
 
 func create_process():
-	OS.execute(self.path, [str(self.port)],out,true,true)
+	print("[DEBUG] creating a process : "+self.exec_path + " : "+str(self.arguments))
+	OS.execute(self.exec_path, self.arguments,out,true,true)
+	print("[DEBUG] out : "+str(out))
 	return out
+
+func kill():
+	send_output("[STOP]")

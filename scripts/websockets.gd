@@ -3,11 +3,12 @@ class_name __WebSockets
 
 var socket
 var url
+var port
+
 func _init(port:int):
+	print("[DEBUG] Starting socket class at port "+str(port))
 	url = "ws://localhost:"+str(port)
 	socket = WebSocketPeer.new()
-
-
 
 func start():
 	var err = self.socket.connect_to_url(self.url)
@@ -22,7 +23,7 @@ func start():
 func listen():
 	self.socket.poll()
 	var state = self.socket.get_ready_state()
-
+	print("[DEBUG] listening sockets "+ str(state))
 	# WebSocketPeer.STATE_OPEN means the socket is connected and ready
 	# to send and receive data.
 	if state == WebSocketPeer.STATE_OPEN:

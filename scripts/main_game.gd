@@ -10,7 +10,7 @@ extends Node2D
 
 var started = false
 @onready var tick_count = 0
-@onready var cell = preload("res://cell.tscn")
+@onready var cell = preload("res://scenes/cell.tscn")
 @onready var panel_position = get_parent().position
 var map:Array = []
 
