@@ -9,7 +9,7 @@ extends Node2D
 @export var number_cell_y: int = 25
 @export var human_game: bool = true
 @export var players: Array[Player]
-
+@export var number_fruits: int = 5
 #--------------------------------------
 # ONREADY
 #--------------------------------------
@@ -59,12 +59,12 @@ func create_map():
 	map.panel_position = panel_position
 	map.cell = cell
 	map.create_map(get_parent(), self)
+	map.generate_fruits(number_fruits)
 
 
 ## Creates the players
 func create_player():
 	for col in param.player_colors:
-		print(col)
 		var player = Player.new()
 		player.initialize_player([Vector2(5,5),Vector2(6,5),Vector2(7,5)],col, map)
 		players.append(player)

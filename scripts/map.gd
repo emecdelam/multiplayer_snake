@@ -52,13 +52,28 @@ func generate_walls(number: int):
 		# Check if the cell has the "good" color, being empty
 		if get_cell(pos).color == param.empty_cell_color:
 			change_cell_color(pos, param.wall_cell_color)
+			wall.append(pos)
 			continue
 
 		# Wrong color cell, if the cell is already occupied
 		else:
-			number += 1
+			number -= 1
 
-
+## Generate the {number} of fruits
+func generate_fruits(number: int):
+	for i in range(number):
+		if not generate_fruit():
+			i -= 1
+			continue
+			
+##Generate a single fruit
+func generate_fruit() -> bool:
+	var pos: Vector2 = Vector2(randi_range(0, number_cell_x-1), randi_range(0, number_cell_y-1))
+	print(pos)
+	if get_cell(pos).color == param.empty_cell_color:
+		change_cell_color(pos, param.fruit_cell_color)
+		return true
+	return false
 ## Checks if at {pos} there is a wall or a border
 func check_player_collision(pos: Vector2) -> bool:
 	var cell_color = get_cell(pos).color
@@ -76,7 +91,10 @@ func check_player_collision(pos: Vector2) -> bool:
 
 ## Checks for fruit collisions
 func check_fruit_collision(pos: Vector2) -> bool:
-	return get_cell(pos).color == param.fruit_cell_color
+	if get_cell(pos).color == param.fruit_cell_color:
+		generate_fruits(1)
+		return true
+	return false
 
 
 ## Changes the cell color at {pos} to the {player}.color
@@ -90,6 +108,7 @@ func remove_player_pos(pos: Vector2, player: Player):
 		change_cell_color(pos, param.empty_cell_color)
 	else:
 		print("[WARNING] trying to remove a player cell that didn't belong")
+
 
 func get_map_state():
 	pass

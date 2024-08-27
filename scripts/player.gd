@@ -47,10 +47,11 @@ func move_snake(map: Map) -> bool:
 		return false
 
 	body.append(new_snake_pos)
-	map.add_player_pos(new_snake_pos, self)
 	# Hits a fruit
 	if map.check_fruit_collision(new_snake_pos):
+		map.add_player_pos(new_snake_pos, self)
 		return true
+	map.add_player_pos(new_snake_pos, self)
 	# Doesn't collide
 	var tail = body.pop_front()
 	map.remove_player_pos(tail, self)
