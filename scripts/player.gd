@@ -8,7 +8,7 @@ class_name Player
 var body: Array[Vector2] = []
 var color: Color
 var alive: bool = false
-
+var score: Label
 # Directions
 enum Direction { UP, DOWN, LEFT, RIGHT }
 
@@ -25,12 +25,14 @@ func _process(_delta):
 
 
 ## Initialize positions and color for the cells
-func initialize_player(coordinates:Array, panel_color: Color, map: Map):
+func initialize_player(coordinates:Array, panel_color: Color, map: Map, label:Label):
 	color = panel_color
 	alive = true
+	score = label
 	for coor in coordinates:
 		body.append(coor)
 		map.add_player_pos(coor, self)
+	update_score()
 
 
 
@@ -50,6 +52,7 @@ func move_snake(map: Map) -> bool:
 	# Hits a fruit
 	if map.check_fruit_collision(new_snake_pos):
 		map.add_player_pos(new_snake_pos, self)
+		update_score()
 		return true
 	map.add_player_pos(new_snake_pos, self)
 	# Doesn't collide
@@ -87,4 +90,6 @@ func check_inputs():
 		new_direction = Direction.RIGHT
 	direction = new_direction
 
-
+## Updates the label used to display the score
+func update_score():
+	score.text = str(len(body))

@@ -69,7 +69,6 @@ func generate_fruits(number: int):
 ##Generate a single fruit
 func generate_fruit() -> bool:
 	var pos: Vector2 = Vector2(randi_range(0, number_cell_x-1), randi_range(0, number_cell_y-1))
-	print(pos)
 	if get_cell(pos).color == param.empty_cell_color:
 		change_cell_color(pos, param.fruit_cell_color)
 		return true

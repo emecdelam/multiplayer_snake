@@ -15,7 +15,7 @@ extends Node2D
 #--------------------------------------
 @onready var panel_position: Vector2 = position
 @onready var cell: Resource = preload("res://scenes/cell.tscn")
-
+@onready var label1 = get_tree().root.get_node("GUI/Panel/MarginContainer/HBoxContainer/VBoxContainer/Panel/VSplitContainer/MarginContainer/VBoxContainer/Label2")
 #--------------------------------------
 # GLOBAL VAR
 #--------------------------------------
@@ -32,16 +32,18 @@ func _ready():
 	create_map()
 	create_player()
 	timer  = get_parent().get_node("Timer")
+	
 
 
-
-func _process(delta):
-	if timer.is_stopped():
-		for player in players:
-			var dead = player.move_snake(map)
-			if not dead:
-				print("player died")
-		timer.start()
+func _process(_delta):
+	if not timer.is_stopped():
+		return
+	for player in players:
+		var alive = player.move_snake(map)
+		if alive:
+			continue
+		handle_death_player(player)
+	timer.start()
 	
 
 
@@ -66,7 +68,10 @@ func create_map():
 func create_player():
 	for col in param.player_colors:
 		var player = Player.new()
-		player.initialize_player([Vector2(5,5),Vector2(6,5),Vector2(7,5)],col, map)
+		player.initialize_player([Vector2(5,5),Vector2(6,5),Vector2(7,5)],col, map, label1)
 		players.append(player)
 		add_child(player)
 
+## Handles the death of any player
+func handle_death_player(player: Player):
+	pass
