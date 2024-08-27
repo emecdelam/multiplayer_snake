@@ -1,11 +1,10 @@
 [gd_scene load_steps=2 format=3 uid="uid://dmee1ayniffg3"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pindu"]
-bg_color = Color(0.101961, 0.101961, 0.101961, 1)
+[ext_resource type="Script" path="res://scripts/cell.gd" id="1_ged2e"]
 
-[node name="cell" type="Panel"]
-custom_minimum_size = Vector2(20, 0)
-offset_right = 20.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_pindu")
+[node name="ColorRect" type="ColorRect"]
+custom_minimum_size = Vector2(2, 2)
+offset_right = 40.0
+offset_bottom = 40.0
+color = Color(0.101961, 0.101961, 0.101961, 1)
+script = ExtResource("1_ged2e")

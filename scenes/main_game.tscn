@@ -106,12 +106,7 @@ metadata/_edit_use_anchors_ = true
 
 [node name="Node2D" type="Node2D" parent="Panel/MarginContainer/HBoxContainer/Panel2"]
 script = ExtResource("1_c2hxe")
-cell_size = null
-border_size = null
-number_cell_x = null
-number_cell_y = null
-tick_rate = null
-food_rate = null
 
-[connection signal="pressed" from="Panel/MarginContainer/HBoxContainer/VBoxContainer/MarginContainer3/Button" to="Panel/MarginContainer/HBoxContainer/Panel2/Node2D" method="_on_button_pressed"]
-[connection signal="toggled" from="Panel/MarginContainer/HBoxContainer/VBoxContainer/MarginContainer3/Button" to="Panel/MarginContainer/HBoxContainer/Panel2/Node2D" method="_on_button_toggled"]
+[node name="Timer" type="Timer" parent="Panel/MarginContainer/HBoxContainer/Panel2"]
+wait_time = 0.1
+one_shot = true
