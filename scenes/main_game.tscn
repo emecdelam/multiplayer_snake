@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://bujagclxbif11"]
 
-[ext_resource type="Script" path="res://scripts/main_game.gd" id="1_c2hxe"]
+[ext_resource type="Script" path="res://scripts/game/main_game.gd" id="1_c2hxe"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fjvs4"]
 bg_color = Color(0.129412, 0.129412, 0.129412, 1)
@@ -42,10 +42,12 @@ layout_mode = 2
 theme_override_constants/separation = 20
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(0, 400)
 layout_mode = 2
+size_flags_vertical = 0
 
 [node name="Panel" type="Panel" parent="Panel/MarginContainer/HBoxContainer/VBoxContainer"]
-custom_minimum_size = Vector2(100, 200)
+custom_minimum_size = Vector2(150, 200)
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -57,6 +59,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+split_offset = 200
 
 [node name="MarginContainer" type="MarginContainer" parent="Panel/MarginContainer/HBoxContainer/VBoxContainer/Panel/VSplitContainer"]
 custom_minimum_size = Vector2(50, 100)
@@ -67,21 +70,25 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer/HBoxContainer/VBoxContainer/Panel/VSplitContainer/MarginContainer"]
+[node name="VBoxContainer1" type="VBoxContainer" parent="Panel/MarginContainer/HBoxContainer/VBoxContainer/Panel/VSplitContainer/MarginContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Panel/MarginContainer/HBoxContainer/VBoxContainer/Panel/VSplitContainer/MarginContainer/VBoxContainer"]
+[node name="name" type="Label" parent="Panel/MarginContainer/HBoxContainer/VBoxContainer/Panel/VSplitContainer/MarginContainer/VBoxContainer1"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="length" type="Label" parent="Panel/MarginContainer/HBoxContainer/VBoxContainer/Panel/VSplitContainer/MarginContainer/VBoxContainer1"]
 layout_mode = 2
 size_flags_vertical = 0
 text = "Length :"
 
-[node name="Label2" type="Label" parent="Panel/MarginContainer/HBoxContainer/VBoxContainer/Panel/VSplitContainer/MarginContainer/VBoxContainer"]
+[node name="score" type="Label" parent="Panel/MarginContainer/HBoxContainer/VBoxContainer/Panel/VSplitContainer/MarginContainer/VBoxContainer1"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 0
 text = "0"
 
 [node name="MarginContainer2" type="MarginContainer" parent="Panel/MarginContainer/HBoxContainer/VBoxContainer/Panel/VSplitContainer"]
-visible = false
 custom_minimum_size = Vector2(50, 100)
 layout_mode = 2
 size_flags_vertical = 0
@@ -90,15 +97,20 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer/HBoxContainer/VBoxContainer/Panel/VSplitContainer/MarginContainer2"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="Panel/MarginContainer/HBoxContainer/VBoxContainer/Panel/VSplitContainer/MarginContainer2"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Panel/MarginContainer/HBoxContainer/VBoxContainer/Panel/VSplitContainer/MarginContainer2/VBoxContainer"]
+[node name="name_2" type="Label" parent="Panel/MarginContainer/HBoxContainer/VBoxContainer/Panel/VSplitContainer/MarginContainer2/VBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="length" type="Label" parent="Panel/MarginContainer/HBoxContainer/VBoxContainer/Panel/VSplitContainer/MarginContainer2/VBoxContainer2"]
 layout_mode = 2
 size_flags_vertical = 0
 text = "Length :"
 
-[node name="Label2" type="Label" parent="Panel/MarginContainer/HBoxContainer/VBoxContainer/Panel/VSplitContainer/MarginContainer2/VBoxContainer"]
+[node name="score_2" type="Label" parent="Panel/MarginContainer/HBoxContainer/VBoxContainer/Panel/VSplitContainer/MarginContainer2/VBoxContainer2"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 0
 text = "0"
@@ -117,7 +129,6 @@ cell_size = null
 border_size = null
 number_cell_x = null
 number_cell_y = null
-human_game = null
 number_fruits = null
 number_walls = null
 player_length = null

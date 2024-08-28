@@ -10,7 +10,7 @@ var color: Color
 var tail_color: Color
 var alive: bool = false
 var score: Label
-var new_inputs: bool = false
+var human: bool = true
 # Directions
 enum Direction { UP, DOWN, LEFT, RIGHT, NULL}
 
@@ -24,16 +24,19 @@ var new_direction = Direction.RIGHT
 func _process(delta):
 	if not alive:
 		return
-	check_inputs()
+
+	if human:
+		check_inputs()
 
 
 ## Initialize positions and color for the cells
-func initialize_player(coordinates:Array, panel_colors: Array, map: Map, label:Label):
+func initialize_player(coordinates:Array, panel_colors: Array, player_name: String, map: Map, label: Label):
 	# Initializing variables
 	color = panel_colors[0]
 	tail_color = panel_colors[1]
 	alive = true
 	score = label
+	name = player_name
 	for coor in coordinates:
 		body.append(coor)
 		map.add_player_pos(coor, self)
@@ -55,7 +58,6 @@ func initialize_player(coordinates:Array, panel_colors: Array, map: Map, label:L
 func move_snake(map: Map) -> bool:
 	if not alive:
 		return false
-
 	var snake_head: Vector2 = body[-1]
 	var new_snake_pos: Vector2 = snake_head + match_direction_vector(direction)
 
@@ -76,11 +78,19 @@ func move_snake(map: Map) -> bool:
 	var tail = body.pop_front()
 	map.remove_player_pos(tail, self)
 	update_player_gradient(map)
-	new_inputs = false
+
 	return true
 
+## The function cleaning up the snake on the map
+func clear_from_map(map: Map):
+	for pos in body:
+		map.remove_player_pos(pos, self)
 
-
+## The function dispalying a dead snake
+func display_dead_body(map: Map):
+	for pos in body:
+		var cell = map.get_cell(pos)
+		cell.modulate = cell.color + Color(0, 0, 0, 0.5)
 
 ## A function to extract the coordinate change from a Direction
 func match_direction_vector(dir: Direction) -> Vector2:
@@ -116,8 +126,6 @@ func match_vector_direction(vec: Vector2) -> Direction:
 	
 ## Checks for user inputs, not usefull for ai
 func check_inputs():
-	if new_inputs:
-		return
 	if Input.is_action_pressed("move_up") and direction != Direction.DOWN:
 		new_direction = Direction.UP
 	elif Input.is_action_pressed("move_down") and direction != Direction.UP:
@@ -127,7 +135,6 @@ func check_inputs():
 	elif Input.is_action_pressed("move_right") and direction != Direction.LEFT:
 		new_direction = Direction.RIGHT
 	direction = new_direction
-	new_inputs = false
 
 
 ## Updates the label used to display the score
@@ -135,10 +142,12 @@ func update_score():
 	score.text = str(len(body))
 
 
+## Updates the color for the player on the map
 func update_player_gradient(map: Map):
 	var colors = generate_gradient(tail_color, color, len(body))
 	for i in range(len(body)):
 		map.change_cell_color(body[i], colors[i])
+
 
 ## Function to generate a list of colors forming a gradient between two colors returns from b to a
 func generate_gradient(color_a: Color, color_b: Color, steps: int) -> Array:
@@ -153,3 +162,4 @@ func generate_gradient(color_a: Color, color_b: Color, steps: int) -> Array:
 ## Eases the changes
 func steep_change_ease(t: float, power: float) -> float:
 	return pow(t, power)
+

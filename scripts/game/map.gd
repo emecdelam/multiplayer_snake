@@ -40,6 +40,9 @@ func get_cell(pos: Vector2) -> Cell:
 
 ## Changes the color of the cell at {pos} to {color}
 func change_cell_color(pos: Vector2, color: Color):
+	if pos.x >= number_cell_x or pos.x < 0 or pos.y >= number_cell_y or pos.y < 0:
+		print("[WARNING] trying to change a cell outside of the map")
+		return
 	get_cell(pos).color = color
 
 
@@ -48,16 +51,35 @@ func generate_walls(number: int):
 	for i in range(number):
 		# Random position in the scope
 		var pos: Vector2 = Vector2(randi_range(0, number_cell_x-1), randi_range(0, number_cell_y-1))
-
+		if is_in_spawn_region(pos):
+			i-=1
+			continue
 		# Check if the cell has the "good" color, being empty
 		if get_cell(pos).color == param.empty_cell_color:
 			change_cell_color(pos, param.wall_cell_color)
 			wall.append(pos)
-			continue
-
 		# Wrong color cell, if the cell is already occupied
 		else:
-			number -= 1
+			pass
+## A function to determine if the pos in 2 block away from a player, it is optimised by taking profit of the fact that snake are colinear and adjacent
+func is_in_spawn_region(pos: Vector2) -> bool:
+	for spawn in param.spawns:
+		if pos in spawn:
+			return true
+		var start = spawn[0]
+		var end = spawn[-1]
+		if end.x == start.x and end.y == start.y:
+			print("[WARNING] seems like a snake is of length one or as conflicting head and tail, might create error in spawn box")
+		# Calculate bounds of the segment
+		var min_x = min(start.x, end.x) - 1
+		var max_x = max(start.x, end.x) + 1
+		var min_y = min(start.y, end.y) - 1
+		var max_y = max(start.y, end.y) + 1
+
+		# Check if the point is within the expanded bounds
+		if pos.x >= min_x and pos.x <= max_x and pos.y >= min_y and pos.y <= max_y:
+			return true
+	return false
 
 ## Generate the {number} of fruits
 func generate_fruits(number: int):
@@ -101,6 +123,9 @@ func check_fruit_collision(pos: Vector2) -> bool:
 
 ## Changes the cell color at {pos} to the {player}.color
 func add_player_pos(pos: Vector2, player: Player):
+	if pos.x >= number_cell_x or pos.x < 0 or pos.y >= number_cell_y or pos.y < 0:
+		print("[WARNING] trying to create a player outside of the map")
+		return
 	get_cell(pos).color = player.color
 
 ## Return a boolean descibing if a color is in a gradient
@@ -121,5 +146,62 @@ func remove_player_pos(pos: Vector2, player: Player):
 		print("[WARNING] trying to remove a player cell that didn't belong")
 
 
-func get_map_state():
-	pass
+func dump_helper_analyse_player_array(players: Array[Player], cell_color: Color) -> String:
+	for player:Player in players:
+		if player.color == cell_color:
+			return "b"
+		elif is_color_between(player.color, player.tail_color, cell_color):
+			return "o"
+	return ""
+func dump_map_state(player_a: Player, players: Array[Player]) -> String:
+	var ret = ""
+	for y in range(number_cell_y):
+		for x in range(number_cell_x):
+			var cell_color = get_cell(Vector2(x,y)).color
+			match cell_color:
+				param.empty_cell_color:
+					ret += "0"
+				param.wall_cell_color:
+					ret += "2"
+				param.fruit_cell_color:
+					ret += "1"
+				player_a.color:
+					ret += "a"
+				_ :
+					
+					if is_color_between(player_a.color, player_a.tail_color, cell_color):
+						ret += "x,"
+						continue
+					var helper = dump_helper_analyse_player_array(players, cell_color)
+					if helper != "":
+						ret += helper
+					else:
+						print("[WARNING] unknown color : "+str(get_cell(Vector2(x,y))))
+			ret += ","
+		ret += ";"
+
+	return ret
+
+func dump_map_opposite(input: String) -> String:
+	# Special Unicode character unlikely to appear in text
+	var placeholder1 = "\uFFFF"  
+	var placeholder2 = "\uFFFE"
+
+	# Replace the first occurrences with placeholders
+	input = input.replace("a", placeholder1)
+	input = input.replace("b", placeholder2)
+	input = input.replace(placeholder1, "b")
+	input = input.replace(placeholder2, "a")
+	input = input.replace("x", placeholder1)
+	input = input.replace("o", placeholder2)
+	input = input.replace(placeholder1, "o")
+	input = input.replace(placeholder2, "x")
+
+	return input
+
+func print_map_state(player_a: Player, players: Array[Player]):
+	var dump = dump_map_state(player_a, players)
+	dump = dump.replace(";","\n")
+	dump = dump.replace(","," ")
+	print(dump)
+
