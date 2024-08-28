@@ -10,18 +10,18 @@ var color: Color
 var tail_color: Color
 var alive: bool = false
 var score: Label
-var human: bool = true
+var human: bool = false
 # Directions
 enum Direction { UP, DOWN, LEFT, RIGHT, NULL}
 
 # The last input is stored to avoid someone going UP -> DOWN killing himself
 var direction = Direction.RIGHT
-var new_direction = Direction.RIGHT
+var old_direction = Direction.RIGHT
 
 #--------------------------------------
 # Functions
 #--------------------------------------
-func _process(delta):
+func _process(_delta):
 	if not alive:
 		return
 
@@ -48,7 +48,7 @@ func initialize_player(coordinates:Array, panel_colors: Array, player_name: Stri
 		print("[WARNING] less than two points are used to place the snake originally")
 		return
 	direction = match_vector_direction(body[-1] - body[-2])
-	new_direction = direction
+	old_direction = direction
 	if direction == Direction.NULL :
 		print("[WARNING] direction is NULL, the head is not direclty adjacent to the segment before")
 		
@@ -65,7 +65,7 @@ func move_snake(map: Map) -> bool:
 	if map.check_player_collision(new_snake_pos):
 		alive = false
 		return false
-
+	old_direction = direction
 	body.append(new_snake_pos)
 	# Hits a fruit
 	if map.check_fruit_collision(new_snake_pos):
@@ -122,19 +122,39 @@ func match_vector_direction(vec: Vector2) -> Direction:
 			return Direction.RIGHT
 		_:
 			return Direction.NULL
+
+
+## A function to get the Direction based on a string
+func match_string_direction(input: String) -> Direction:
+	match input:
+		"UP":
+			return Direction.UP
+		"DOWN":
+			return Direction.DOWN
+		"LEFT":
+			return Direction.LEFT
+		"RIGHT":
+			return Direction.RIGHT
+		_:
+			print("[WARNING] trying to match a string but nothing found for : " + input)
+			return Direction.NULL
 		
+## Update direction
+func update_direction(dir: Direction):
+	direction = dir
 	
 ## Checks for user inputs, not usefull for ai
 func check_inputs():
-	if Input.is_action_pressed("move_up") and direction != Direction.DOWN:
-		new_direction = Direction.UP
-	elif Input.is_action_pressed("move_down") and direction != Direction.UP:
-		new_direction = Direction.DOWN
-	elif Input.is_action_pressed("move_left") and direction != Direction.RIGHT:
-		new_direction = Direction.LEFT
-	elif Input.is_action_pressed("move_right") and direction != Direction.LEFT:
-		new_direction = Direction.RIGHT
-	direction = new_direction
+	if not human:
+		return
+	if Input.is_action_pressed("move_up") and old_direction != Direction.DOWN:
+		direction = Direction.UP
+	elif Input.is_action_pressed("move_down") and old_direction != Direction.UP:
+		direction = Direction.DOWN
+	elif Input.is_action_pressed("move_left") and old_direction != Direction.RIGHT:
+		direction = Direction.LEFT
+	elif Input.is_action_pressed("move_right") and old_direction != Direction.LEFT:
+		direction = Direction.RIGHT
 
 
 ## Updates the label used to display the score

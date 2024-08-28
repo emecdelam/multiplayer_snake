@@ -2,32 +2,33 @@ import sys
 import asyncio
 import websockets
 
-# Function to connect to the WebSocket server and send "Hello" every second
+# main loop
 async def client(uri):
     try:
+        # attempt a connection
         async with websockets.connect(uri) as websocket:
-            # Send "Hello" every second
-            async def send_hello():
-                while True:
-                    await asyncio.sleep(1)
-                    await websocket.send("Hello")
-                    print("Sent: Hello")
-
-            # Start sending "Hello" in the background
-            hello_task = asyncio.create_task(send_hello())
-
-            # Handle incoming messages
+            # creates a background task
+            # - hello_task = asyncio.create_task(send_hello(websocket))
+            await websocket.send("[START] Connection established with kiwi") # can be replaced by send_hello()
             try:
                 async for message in websocket:
+                    await move(websocket, message)
                     print(f"Received: {message}")
             finally:
                 print("Connection closed")
-                hello_task.cancel()  # Stop sending "Hello" when the connection is closed
+                # cancel here the task
+                # - hello_task.cancel()
     except Exception as e:
         print(f"Error: {e}")
 
-# Entry point of the script
+async def move(websocket, message):
+    # ============= your code for moving here =============
+    # process etc
+    await websocket.send(f"I received : {message}") # you should return a move
+
 if __name__ == "__main__":
-    port = int(sys.argv[1]) if len(sys.argv) > 1 else 9400
+    print("Program started")
+    # port is given as the first argument
+    port = int(sys.argv[1]) if len(sys.argv) > 1 else 34100
     uri = f"ws://localhost:{port}"
     asyncio.run(client(uri))

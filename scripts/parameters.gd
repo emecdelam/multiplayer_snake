@@ -10,4 +10,5 @@ class_name Parameters
 @export var wall_cell_color = Color("#373737")
 @export var fruit_cell_color = Color("#AD3D17")
 
-
+## commmand and arguments for the execution
+@export var player_exec := [["python3", ["python/player_code/main.py"]],["python3", ["python/player_code/main.py"]]]

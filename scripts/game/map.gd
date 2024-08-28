@@ -145,7 +145,7 @@ func remove_player_pos(pos: Vector2, player: Player):
 	else:
 		print("[WARNING] trying to remove a player cell that didn't belong")
 
-
+## An helper method to dump_map_state
 func dump_helper_analyse_player_array(players: Array[Player], cell_color: Color) -> String:
 	for player:Player in players:
 		if player.color == cell_color:
@@ -153,6 +153,8 @@ func dump_helper_analyse_player_array(players: Array[Player], cell_color: Color)
 		elif is_color_between(player.color, player.tail_color, cell_color):
 			return "o"
 	return ""
+
+## A function to get the whole map state as a string
 func dump_map_state(player_a: Player, players: Array[Player]) -> String:
 	var ret = ""
 	for y in range(number_cell_y):
@@ -182,6 +184,7 @@ func dump_map_state(player_a: Player, players: Array[Player]) -> String:
 
 	return ret
 
+## A function to get the opposite of a dump, to avoid recalculing
 func dump_map_opposite(input: String) -> String:
 	# Special Unicode character unlikely to appear in text
 	var placeholder1 = "\uFFFF"  
@@ -199,6 +202,7 @@ func dump_map_opposite(input: String) -> String:
 
 	return input
 
+## Simple print of the dump
 func print_map_state(player_a: Player, players: Array[Player]):
 	var dump = dump_map_state(player_a, players)
 	dump = dump.replace(";","\n")

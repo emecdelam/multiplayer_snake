@@ -7,24 +7,27 @@ extends Node2D
 @export var border_size: Vector2 = Vector2(5, 5)
 @export var number_cell_x: int = 35
 @export var number_cell_y: int = 25
-@export var players: Array[Player]
+
 @export var number_fruits: int = 5
-@export var number_walls: int = 100
+@export var number_walls: int = 0
 @export var player_length: int = 3
 #--------------------------------------
 # ONREADY
 #--------------------------------------
 @onready var panel_position: Vector2 = position
 @onready var cell: Resource = preload("res://scenes/cell.tscn")
-
+@onready var console: ServerConsole = %console
 #--------------------------------------
 # GLOBAL VAR
 #--------------------------------------
-var map: Map = Map.new()
+var map := Map.new()
 var timer: Timer
 var spawns: Array[Array]
-var param: Parameters = Parameters.new()
-
+var players: Array[Player]
+var servers: Array[Server]
+var param := Parameters.new()
+var thread_manager := ThreadManager.new(param.number_of_players)
+var connections: Array[bool] = []
 
 #--------------------------------------
 # Default functions
@@ -45,6 +48,7 @@ func _ready():
 	spawns = create_spawns(param.number_of_players)
 	create_map()
 	create_player()
+	create_servers()
 	timer  = get_parent().get_node("Timer")
 	map.generate_walls(number_walls, spawns)
 	
@@ -53,6 +57,9 @@ func _ready():
 
 
 func _process(_delta):
+	for i in connections:
+		if not i: # Checks that every node is connected
+			return
 	if not timer.is_stopped():
 		return
 	for player in players:
@@ -97,7 +104,26 @@ func create_player():
 		players.append(player)
 		add_child(player)
 
+## Create websocket servers for every player
+func create_servers():
+	var available_ports = []
+	for port in range(34001, 34196 + 1):
+		available_ports.append(port)
+	available_ports.shuffle()
+	for i in range(param.number_of_players):
+		var server = Server.new()
+		randi_range(34001, 34196)
+		if not server.initialize_server(available_ports.pop_front(), self, players[i], console):
+			print("[WARNING] Failed to initialize a server at index : "+str(i))
+		servers.append(server)
+		connections.append(false)
 
+## Function to update the array of connected servers
+func update_connection(server: Server):
+	for i in range(len(servers)):
+		if servers[i].PORT == server.PORT:
+			connections[i] = server.connected
+			break
 
 
 ## Generates random spawn points for the {number} of players
@@ -136,8 +162,8 @@ func create_spawns(number: int) -> Array[Array]:
 	return ret
 
 ## A helper function to determine if the pos in 2 block away from a player, it is optimised by taking profit of the fact that snake are colinear and adjacent
-func is_in_spawn_region(pos: Vector2, spawns: Array, distance: int) -> bool:
-	for spawn in spawns:
+func is_in_spawn_region(pos: Vector2, used_spawns: Array, distance: int) -> bool:
+	for spawn in used_spawns:
 		if pos in spawn:
 			return true
 		var start = spawn[0]

@@ -24,6 +24,6 @@ func execute(index: int, exec_path: String, exec_args: Array):
 
 ## A function do print all outputs
 func dump_outputs():
-	print("[INFO] dumping outputs")
+	print("[INFO] waiting for threads to finish dumping outputs")
 	for out in outputs:
 		print(out)
