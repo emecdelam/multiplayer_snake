@@ -81,6 +81,7 @@ size_flags_vertical = 0
 text = "0"
 
 [node name="MarginContainer2" type="MarginContainer" parent="Panel/MarginContainer/HBoxContainer/VBoxContainer/Panel/VSplitContainer"]
+visible = false
 custom_minimum_size = Vector2(50, 100)
 layout_mode = 2
 size_flags_vertical = 0

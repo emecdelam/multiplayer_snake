@@ -73,18 +73,20 @@ func generate_fruit() -> bool:
 		change_cell_color(pos, param.fruit_cell_color)
 		return true
 	return false
+
+
 ## Checks if at {pos} there is a wall or a border
 func check_player_collision(pos: Vector2) -> bool:
+	if pos.x < 0 or pos.x >= number_cell_x:
+		return true
+	elif pos.y < 0 or pos.y >= number_cell_y:
+		return true
 	var cell_color = get_cell(pos).color
 	if cell_color == param.fruit_cell_color:
 		return false
 	if cell_color == param.wall_cell_color:
 		return true
 	if cell_color != param.empty_cell_color:
-		return true
-	elif pos.x < 0 or pos.x >= number_cell_x:
-		return true
-	elif pos.y < 0 or pos.y >= number_cell_y:
 		return true
 	return false
 

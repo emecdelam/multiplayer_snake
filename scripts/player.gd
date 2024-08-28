@@ -33,13 +33,14 @@ func initialize_player(coordinates:Array, panel_colors: Array, map: Map, label:L
 	for coor in coordinates:
 		body.append(coor)
 		map.add_player_pos(coor, self)
+	update_score()
 	if len(body) < 2:
 		print("[WARNING] less than two points are used to place the snake originally")
-	else:
-		direction = match_vector_direction(body[-1] - body[-2])
-		new_direction = direction
-		if direction == Direction.NULL :
-			print("[WARNING] direction is NULL, the head is not direclty adjacent to the segment before")
+		return
+	direction = match_vector_direction(body[-1] - body[-2])
+	new_direction = direction
+	if direction == Direction.NULL :
+		print("[WARNING] direction is NULL, the head is not direclty adjacent to the segment before")
 		
 
 
@@ -134,7 +135,11 @@ func generate_gradient(color_a: Color, color_b: Color, steps: int) -> Array:
 	var gradient_colors = []
 	for i in range(steps):
 		var t = float(i) / float(steps - 1)
-		var lerp_color = color_a.lerp(color_b, t)
+		var lerp_color = color_a.lerp(color_b, steep_change_ease(t, 3))
 		gradient_colors.append(lerp_color)
 
 	return gradient_colors
+	
+## Eases the changes
+func steep_change_ease(t: float, power: float) -> float:
+	return pow(t, power)

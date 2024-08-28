@@ -63,6 +63,7 @@ func create_map():
 	map.cell = cell
 	map.create_map(get_parent(), self)
 	map.generate_fruits(number_fruits)
+	map.generate_walls(50)
 
 
 ## Creates the players
