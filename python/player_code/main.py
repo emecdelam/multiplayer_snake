@@ -9,7 +9,7 @@ async def client(uri):
         async with websockets.connect(uri) as websocket:
             # creates a background task
             # - hello_task = asyncio.create_task(send_hello(websocket))
-            await websocket.send("[START] Connection established with kiwi") # can be replaced by send_hello()
+            await websocket.send(f"[START] Connection established with kiwi at : {uri.split(':')[2]}") # can be replaced by send_hello()
             try:
                 async for message in websocket:
                     await move(websocket, message)

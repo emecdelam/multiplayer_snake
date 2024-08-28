@@ -9,7 +9,8 @@ func add_message(msg: String, color: Color):
 	label.text = msg
 	label.add_theme_font_size_override("font_size", 10)
 	label.add_theme_color_override("font_color", color)
-
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	label.custom_minimum_size = Vector2(400, 20)
 	labels.append(label)
 	add_child(label)
 
