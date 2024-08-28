@@ -119,7 +119,9 @@ number_cell_x = null
 number_cell_y = null
 human_game = null
 number_fruits = null
+number_walls = null
+player_length = null
 
 [node name="Timer" type="Timer" parent="Panel/MarginContainer/HBoxContainer/Panel2"]
-wait_time = 0.1
+wait_time = 0.15
 one_shot = true

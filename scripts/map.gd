@@ -62,16 +62,17 @@ func generate_walls(number: int):
 ## Generate the {number} of fruits
 func generate_fruits(number: int):
 	for i in range(number):
-		if not generate_fruit():
-			i -= 1
+		if not generate_fruit(number_cell_x * number_cell_y):
+			print("[WARNING] Couldn't generate fruit")
 			continue
 			
 ##Generate a single fruit
-func generate_fruit() -> bool:
-	var pos: Vector2 = Vector2(randi_range(0, number_cell_x-1), randi_range(0, number_cell_y-1))
-	if get_cell(pos).color == param.empty_cell_color:
-		change_cell_color(pos, param.fruit_cell_color)
-		return true
+func generate_fruit(max_ite: int) -> bool:
+	for i in range(max_ite):
+		var pos: Vector2 = Vector2(randi_range(0, number_cell_x-1), randi_range(0, number_cell_y-1))
+		if get_cell(pos).color == param.empty_cell_color:
+			change_cell_color(pos, param.fruit_cell_color)
+			return true
 	return false
 
 

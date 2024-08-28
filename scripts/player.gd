@@ -10,7 +10,7 @@ var color: Color
 var tail_color: Color
 var alive: bool = false
 var score: Label
-
+var new_inputs: bool = false
 # Directions
 enum Direction { UP, DOWN, LEFT, RIGHT, NULL}
 
@@ -21,11 +21,15 @@ var new_direction = Direction.RIGHT
 #--------------------------------------
 # Functions
 #--------------------------------------
-
+func _process(delta):
+	if not alive:
+		return
+	check_inputs()
 
 
 ## Initialize positions and color for the cells
 func initialize_player(coordinates:Array, panel_colors: Array, map: Map, label:Label):
+	# Initializing variables
 	color = panel_colors[0]
 	tail_color = panel_colors[1]
 	alive = true
@@ -33,7 +37,10 @@ func initialize_player(coordinates:Array, panel_colors: Array, map: Map, label:L
 	for coor in coordinates:
 		body.append(coor)
 		map.add_player_pos(coor, self)
+	# Setting the score and color
 	update_score()
+	update_player_gradient(map)
+	# Defining the direction
 	if len(body) < 2:
 		print("[WARNING] less than two points are used to place the snake originally")
 		return
@@ -48,7 +55,7 @@ func initialize_player(coordinates:Array, panel_colors: Array, map: Map, label:L
 func move_snake(map: Map) -> bool:
 	if not alive:
 		return false
-	check_inputs()
+
 	var snake_head: Vector2 = body[-1]
 	var new_snake_pos: Vector2 = snake_head + match_direction_vector(direction)
 
@@ -69,6 +76,7 @@ func move_snake(map: Map) -> bool:
 	var tail = body.pop_front()
 	map.remove_player_pos(tail, self)
 	update_player_gradient(map)
+	new_inputs = false
 	return true
 
 
@@ -108,6 +116,8 @@ func match_vector_direction(vec: Vector2) -> Direction:
 	
 ## Checks for user inputs, not usefull for ai
 func check_inputs():
+	if new_inputs:
+		return
 	if Input.is_action_pressed("move_up") and direction != Direction.DOWN:
 		new_direction = Direction.UP
 	elif Input.is_action_pressed("move_down") and direction != Direction.UP:
@@ -117,7 +127,7 @@ func check_inputs():
 	elif Input.is_action_pressed("move_right") and direction != Direction.LEFT:
 		new_direction = Direction.RIGHT
 	direction = new_direction
-
+	new_inputs = false
 
 
 ## Updates the label used to display the score
@@ -139,7 +149,7 @@ func generate_gradient(color_a: Color, color_b: Color, steps: int) -> Array:
 		gradient_colors.append(lerp_color)
 
 	return gradient_colors
-	
+
 ## Eases the changes
 func steep_change_ease(t: float, power: float) -> float:
 	return pow(t, power)

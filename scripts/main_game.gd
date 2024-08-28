@@ -5,11 +5,13 @@ extends Node2D
 #--------------------------------------
 @export var cell_size: Vector2 = Vector2(20, 20)
 @export var border_size: Vector2 = Vector2(5, 5)
-@export var number_cell_x: int = 35
-@export var number_cell_y: int = 25
+@export var number_cell_x: int = 10
+@export var number_cell_y: int = 10
 @export var human_game: bool = true
 @export var players: Array[Player]
 @export var number_fruits: int = 5
+@export var number_walls: int = 10
+@export var player_length: int = 3
 #--------------------------------------
 # ONREADY
 #--------------------------------------
@@ -22,7 +24,7 @@ extends Node2D
 #--------------------------------------
 var map: Map = Map.new()
 var timer: Timer
-
+var spawn_regions: Array
 var param: Parameters = Parameters.new()
 
 
@@ -33,6 +35,7 @@ func _ready():
 	create_map()
 	create_player()
 	timer  = get_parent().get_node("Timer")
+	map.generate_walls(number_walls)
 	
 
 
@@ -63,7 +66,8 @@ func create_map():
 	map.cell = cell
 	map.create_map(get_parent(), self)
 	map.generate_fruits(number_fruits)
-	map.generate_walls(50)
+
+
 
 
 ## Creates the players
@@ -73,6 +77,10 @@ func create_player():
 		player.initialize_player([Vector2(5,5),Vector2(6,5),Vector2(7,5)],col, map, label1)
 		players.append(player)
 		add_child(player)
+
+## Creates the spawn regions
+func create_spawn():
+	pass
 
 
 ## Handles the death of any player
