@@ -1,7 +1,9 @@
 class_name Parameters
 
 
-var player_colors = [Color("#72DF5C")]
+var player_colors = [[Color("#72DF5C"), Color("#145815")]]
+
+
 
 var number_of_players = len(player_colors)
 var empty_cell_color = Color("#1a1a1a")

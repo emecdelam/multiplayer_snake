@@ -15,7 +15,8 @@ extends Node2D
 #--------------------------------------
 @onready var panel_position: Vector2 = position
 @onready var cell: Resource = preload("res://scenes/cell.tscn")
-@onready var label1 = get_tree().root.get_node("GUI/Panel/MarginContainer/HBoxContainer/VBoxContainer/Panel/VSplitContainer/MarginContainer/VBoxContainer/Label2")
+@onready var label1: Label = get_tree().root.get_node("GUI/Panel/MarginContainer/HBoxContainer/VBoxContainer/Panel/VSplitContainer/MarginContainer/VBoxContainer/Label2")
+@onready var label2: Label = get_tree().root.get_node("GUI/Panel/MarginContainer/HBoxContainer/VBoxContainer/Panel/VSplitContainer/MarginContainer2/VBoxContainer/Label2")
 #--------------------------------------
 # GLOBAL VAR
 #--------------------------------------
@@ -71,6 +72,7 @@ func create_player():
 		player.initialize_player([Vector2(5,5),Vector2(6,5),Vector2(7,5)],col, map, label1)
 		players.append(player)
 		add_child(player)
+
 
 ## Handles the death of any player
 func handle_death_player(player: Player):

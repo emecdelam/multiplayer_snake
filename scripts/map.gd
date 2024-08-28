@@ -100,10 +100,19 @@ func check_fruit_collision(pos: Vector2) -> bool:
 func add_player_pos(pos: Vector2, player: Player):
 	get_cell(pos).color = player.color
 
+## Return a boolean descibing if a color is in a gradient
+func is_color_between(color_a: Color, color_b: Color, target_color: Color) -> bool:
+	for channel in range(3):
+		var min_val = min(color_a[channel], color_b[channel])
+		var max_val = max(color_a[channel], color_b[channel])
+		if target_color[channel] < min_val or target_color[channel] > max_val:
+			return false
+	return true
+
 
 ## Changes the cell color at {pos} to the defautl color
 func remove_player_pos(pos: Vector2, player: Player):
-	if get_cell(pos).color == player.color:
+	if is_color_between(player.color, player.tail_color, get_cell(pos).color):
 		change_cell_color(pos, param.empty_cell_color)
 	else:
 		print("[WARNING] trying to remove a player cell that didn't belong")

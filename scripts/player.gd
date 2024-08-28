@@ -7,10 +7,12 @@ class_name Player
 #--------------------------------------
 var body: Array[Vector2] = []
 var color: Color
+var tail_color: Color
 var alive: bool = false
 var score: Label
+
 # Directions
-enum Direction { UP, DOWN, LEFT, RIGHT }
+enum Direction { UP, DOWN, LEFT, RIGHT, NULL}
 
 # The last input is stored to avoid someone going UP -> DOWN killing himself
 var direction = Direction.RIGHT
@@ -20,26 +22,32 @@ var new_direction = Direction.RIGHT
 # Functions
 #--------------------------------------
 
-func _process(_delta):
-	check_inputs()
 
 
 ## Initialize positions and color for the cells
-func initialize_player(coordinates:Array, panel_color: Color, map: Map, label:Label):
-	color = panel_color
+func initialize_player(coordinates:Array, panel_colors: Array, map: Map, label:Label):
+	color = panel_colors[0]
+	tail_color = panel_colors[1]
 	alive = true
 	score = label
 	for coor in coordinates:
 		body.append(coor)
 		map.add_player_pos(coor, self)
-	update_score()
-
+	if len(body) < 2:
+		print("[WARNING] less than two points are used to place the snake originally")
+	else:
+		direction = match_vector_direction(body[-1] - body[-2])
+		new_direction = direction
+		if direction == Direction.NULL :
+			print("[WARNING] direction is NULL, the head is not direclty adjacent to the segment before")
+		
 
 
 ## The function moving the snake returns false if the snake dies
 func move_snake(map: Map) -> bool:
 	if not alive:
 		return false
+	check_inputs()
 	var snake_head: Vector2 = body[-1]
 	var new_snake_pos: Vector2 = snake_head + match_direction_vector(direction)
 
@@ -53,14 +61,16 @@ func move_snake(map: Map) -> bool:
 	if map.check_fruit_collision(new_snake_pos):
 		map.add_player_pos(new_snake_pos, self)
 		update_score()
+		update_player_gradient(map)
 		return true
 	map.add_player_pos(new_snake_pos, self)
 	# Doesn't collide
 	var tail = body.pop_front()
 	map.remove_player_pos(tail, self)
+	update_player_gradient(map)
 	return true
 
-	
+
 
 
 ## A function to extract the coordinate change from a Direction
@@ -74,11 +84,28 @@ func match_direction_vector(dir: Direction) -> Vector2:
 			return Vector2(-1, 0)
 		Direction.RIGHT:
 			return Vector2(1, 0)
+		Direction.NULL:
+			return Vector2(0, 0)
 		_:
 			return Vector2(0, 0)
 
 
-## Checks for user inputs, not usefull
+## A function to extract the direction change from a coordinates
+func match_vector_direction(vec: Vector2) -> Direction:
+	match vec:
+		Vector2(0, -1):
+			return Direction.UP
+		Vector2(0, 1):
+			return Direction.DOWN
+		Vector2(-1, 0):
+			return Direction.LEFT
+		Vector2(1, 0):
+			return Direction.RIGHT
+		_:
+			return Direction.NULL
+		
+	
+## Checks for user inputs, not usefull for ai
 func check_inputs():
 	if Input.is_action_pressed("move_up") and direction != Direction.DOWN:
 		new_direction = Direction.UP
@@ -90,6 +117,24 @@ func check_inputs():
 		new_direction = Direction.RIGHT
 	direction = new_direction
 
+
+
 ## Updates the label used to display the score
 func update_score():
 	score.text = str(len(body))
+
+
+func update_player_gradient(map: Map):
+	var colors = generate_gradient(tail_color, color, len(body))
+	for i in range(len(body)):
+		map.change_cell_color(body[i], colors[i])
+
+## Function to generate a list of colors forming a gradient between two colors returns from b to a
+func generate_gradient(color_a: Color, color_b: Color, steps: int) -> Array:
+	var gradient_colors = []
+	for i in range(steps):
+		var t = float(i) / float(steps - 1)
+		var lerp_color = color_a.lerp(color_b, t)
+		gradient_colors.append(lerp_color)
+
+	return gradient_colors
