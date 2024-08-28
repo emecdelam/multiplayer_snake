@@ -89,8 +89,8 @@ func clear_from_map(map: Map):
 ## The function dispalying a dead snake
 func display_dead_body(map: Map):
 	for pos in body:
-		var cell = map.get_cell(pos)
-		cell.modulate = cell.color + Color(0, 0, 0, 0.5)
+		map.change_cell_color(pos,(color + 0.60 * (tail_color)) / (1.50))
+		
 
 ## A function to extract the coordinate change from a Direction
 func match_direction_vector(dir: Direction) -> Vector2:

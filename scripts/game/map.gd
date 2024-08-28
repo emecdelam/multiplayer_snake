@@ -47,11 +47,11 @@ func change_cell_color(pos: Vector2, color: Color):
 
 
 ## Generate the {number} of walls
-func generate_walls(number: int):
+func generate_walls(number: int, spawns: Array):
 	for i in range(number):
 		# Random position in the scope
 		var pos: Vector2 = Vector2(randi_range(0, number_cell_x-1), randi_range(0, number_cell_y-1))
-		if is_in_spawn_region(pos):
+		if is_in_spawn_region(pos, spawns):
 			i-=1
 			continue
 		# Check if the cell has the "good" color, being empty
@@ -62,8 +62,8 @@ func generate_walls(number: int):
 		else:
 			pass
 ## A function to determine if the pos in 2 block away from a player, it is optimised by taking profit of the fact that snake are colinear and adjacent
-func is_in_spawn_region(pos: Vector2) -> bool:
-	for spawn in param.spawns:
+func is_in_spawn_region(pos: Vector2, spawns: Array) -> bool:
+	for spawn in spawns:
 		if pos in spawn:
 			return true
 		var start = spawn[0]

@@ -125,13 +125,7 @@ metadata/_edit_use_anchors_ = true
 
 [node name="Node2D" type="Node2D" parent="Panel/MarginContainer/HBoxContainer/Panel2"]
 script = ExtResource("1_c2hxe")
-cell_size = null
-border_size = null
-number_cell_x = null
 number_cell_y = null
-number_fruits = null
-number_walls = null
-player_length = null
 
 [node name="Timer" type="Timer" parent="Panel/MarginContainer/HBoxContainer/Panel2"]
 wait_time = 0.15
