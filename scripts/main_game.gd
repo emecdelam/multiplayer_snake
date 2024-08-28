@@ -5,12 +5,12 @@ extends Node2D
 #--------------------------------------
 @export var cell_size: Vector2 = Vector2(20, 20)
 @export var border_size: Vector2 = Vector2(5, 5)
-@export var number_cell_x: int = 10
-@export var number_cell_y: int = 10
+@export var number_cell_x: int = 35
+@export var number_cell_y: int = 25
 @export var human_game: bool = true
 @export var players: Array[Player]
 @export var number_fruits: int = 5
-@export var number_walls: int = 10
+@export var number_walls: int = 50
 @export var player_length: int = 3
 #--------------------------------------
 # ONREADY
