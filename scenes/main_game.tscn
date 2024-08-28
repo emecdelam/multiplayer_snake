@@ -47,7 +47,7 @@ layout_mode = 2
 size_flags_vertical = 0
 
 [node name="Panel" type="Panel" parent="Panel/MarginContainer/HBoxContainer/VBoxContainer"]
-custom_minimum_size = Vector2(150, 200)
+custom_minimum_size = Vector2(125, 200)
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -65,10 +65,10 @@ split_offset = 200
 custom_minimum_size = Vector2(50, 100)
 layout_mode = 2
 size_flags_vertical = 0
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
 
 [node name="VBoxContainer1" type="VBoxContainer" parent="Panel/MarginContainer/HBoxContainer/VBoxContainer/Panel/VSplitContainer/MarginContainer"]
 layout_mode = 2
@@ -92,10 +92,10 @@ text = "0"
 custom_minimum_size = Vector2(50, 100)
 layout_mode = 2
 size_flags_vertical = 0
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="Panel/MarginContainer/HBoxContainer/VBoxContainer/Panel/VSplitContainer/MarginContainer2"]
 layout_mode = 2
@@ -124,6 +124,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_w2xjl")
 metadata/_edit_use_anchors_ = true
 
 [node name="Node2D" type="Node2D" parent="Panel/MarginContainer/HBoxContainer/Panel2"]
+position = Vector2(1, 0)
 script = ExtResource("1_c2hxe")
 number_cell_y = null
 

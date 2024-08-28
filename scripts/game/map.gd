@@ -71,10 +71,10 @@ func is_in_spawn_region(pos: Vector2, spawns: Array) -> bool:
 		if end.x == start.x and end.y == start.y:
 			print("[WARNING] seems like a snake is of length one or as conflicting head and tail, might create error in spawn box")
 		# Calculate bounds of the segment
-		var min_x = min(start.x, end.x) - 1
-		var max_x = max(start.x, end.x) + 1
-		var min_y = min(start.y, end.y) - 1
-		var max_y = max(start.y, end.y) + 1
+		var min_x = min(start.x, end.x) - 2
+		var max_x = max(start.x, end.x) + 2
+		var min_y = min(start.y, end.y) - 2
+		var max_y = max(start.y, end.y) + 2
 
 		# Check if the point is within the expanded bounds
 		if pos.x >= min_x and pos.x <= max_x and pos.y >= min_y and pos.y <= max_y:
