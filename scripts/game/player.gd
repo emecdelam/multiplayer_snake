@@ -64,6 +64,7 @@ func move_snake(map: Map, game: Game) -> bool:
 	# Collides
 	if map.check_player_collision(new_snake_pos):
 		alive = false
+		display_dead_body(map)
 		game.handle_death_player(self)
 		return false
 	old_direction = direction

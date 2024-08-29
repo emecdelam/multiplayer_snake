@@ -14,7 +14,6 @@ async def client(uri, port):
             try:
                 async for message in websocket:
                     if "[STOP]" in message:
-                        print(f"({port}) Exiting ...")
                         sys.exit(1)
                     await move(websocket, message)
 

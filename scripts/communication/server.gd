@@ -69,7 +69,8 @@ func log_message(message: String) -> void:
 	console.add_message("[%s]  (%s) : %s\n" % [Time.get_time_string_from_system(), PORT, message], player.color)
 
 func send_message(message: String) -> void:
-	socket.send_text(message)
+	if socket.get_ready_state() == WebSocketPeer.STATE_OPEN:
+		socket.send_text(message)
 
 
 ## A function to remove the '[...] ' from a msg

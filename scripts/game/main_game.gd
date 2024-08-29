@@ -56,6 +56,7 @@ func _process(_delta):
 	if param.number_of_players < 1:
 		print("[WARNING] No player found")
 		return
+
 	if not timer.is_stopped(): # Check for game ticks
 		return
 
@@ -209,7 +210,14 @@ func is_in_spawn_region(pos: Vector2, used_spawns: Array, distance: int) -> bool
 func handle_death_player(player: Player):
 	dead_count += 1
 	print("[INFO] Player died : "+player.name)
-	player.display_dead_body(map)
+
+	if dead_count + 1 >= param.number_of_players: # 1 winner
+			clean_game()
+
+
+## Function called when there is only one survivir
+func clean_game():
+	print("cleaning game")
 	for server in servers:
 		server._exit_tree()
 	thread_manager.dump_outputs()#.wait_to_finish() # wait for the background thread to clean the other threads, it is done to avoid blocking the main thread
