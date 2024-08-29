@@ -12,8 +12,10 @@ def pick_a_move(input: str):
         parsed.append(line)
     map = np.array(parsed)
 
-    coordinates = np.where(map == 'a')
+    coordinates = np.where(map == '*')
 
+    if len(coordinates[0]) == 0 or len(coordinates[1]) == 0: # happens on death
+        return 
     head = (coordinates[0][0], coordinates[1][0])
     x, y = head
     directions = {

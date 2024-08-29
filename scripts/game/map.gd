@@ -145,15 +145,6 @@ func remove_player_pos(pos: Vector2, player: Player):
 	else:
 		print("[WARNING] trying to remove a player cell that didn't belong")
 
-## An helper method to dump_map_state
-func dump_helper_analyse_player_array(players: Array[Player], cell_color: Color) -> String:
-	for player:Player in players:
-		if player.color == cell_color:
-			return "b"
-		elif is_color_between(player.color, player.tail_color, cell_color):
-			return "o"
-	return ""
-
 ## A function to get the whole map state as a string
 func dump_map_state(player_a: Player, players: Array[Player]) -> String:
 	var ret = ""
@@ -168,38 +159,17 @@ func dump_map_state(player_a: Player, players: Array[Player]) -> String:
 				param.fruit_cell_color:
 					ret += "1"
 				player_a.color:
-					ret += "a"
+					ret += "*"
 				_ :
 					if is_color_between(player_a.color, player_a.tail_color, cell_color):
-						ret += "x,"
-						continue
-					var helper = dump_helper_analyse_player_array(players, cell_color)
-					if helper != "":
-						ret += helper
-					#else:
-					#	print("[WARNING] unknown color : "+str(get_cell(Vector2(x,y))))
+						ret += "-"
+					else:
+						ret += "_"
 			ret += ","
 		ret += ";"
 	ret = ret.erase(ret.length() - 2, 2)
 	return ret
 
-## A function to get the opposite of a dump, to avoid recalculing
-func dump_map_opposite(input: String) -> String:
-	# Special Unicode character unlikely to appear in text
-	var placeholder1 = "\uFFFF"  
-	var placeholder2 = "\uFFFE"
-
-	# Replace the first occurrences with placeholders
-	input = input.replace("a", placeholder1)
-	input = input.replace("b", placeholder2)
-	input = input.replace(placeholder1, "b")
-	input = input.replace(placeholder2, "a")
-	input = input.replace("x", placeholder1)
-	input = input.replace("o", placeholder2)
-	input = input.replace(placeholder1, "o")
-	input = input.replace(placeholder2, "x")
-
-	return input
 
 ## Simple print of the dump
 func print_map_state(player_a: Player, players: Array[Player]):

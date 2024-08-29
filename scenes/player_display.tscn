@@ -25,13 +25,10 @@ theme_override_constants/margin_bottom = 20
 
 [node name="player_v_container" type="VBoxContainer" parent="player_margin"]
 layout_mode = 2
+alignment = 1
 
 [node name="name" type="Label" parent="player_margin/player_v_container"]
 layout_mode = 2
-
-[node name="length" type="Label" parent="player_margin/player_v_container"]
-layout_mode = 2
-text = "Length :"
 
 [node name="score" type="Label" parent="player_margin/player_v_container"]
 layout_mode = 2

@@ -44,6 +44,7 @@ func _process(_delta: float) -> void:
 	#	print("[INFO] WebSocket closed")
 
 func _exit_tree() -> void:
+	connected = false
 	send_message("[STOP]")
 	socket.close()
 	tcp_server.stop()
