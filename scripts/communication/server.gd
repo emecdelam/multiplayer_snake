@@ -77,7 +77,7 @@ func send_message(message: String) -> void:
 func formatted_message(msg: String) -> String:
 	var splitted = msg.split(" ")
 	splitted.remove_at(0)
-	return "".join(splitted)
+	return "".join(splitted).strip_edges(true,true)
 
 
 func handle_message(message: String) -> void:
@@ -89,10 +89,10 @@ func handle_message(message: String) -> void:
 		connected = false
 		get_parent().update_connection(self)
 		log_message(message)
-	elif message.begins_with("[INFO]"):
-		log_message(formatted_message(message))
-	elif message.begins_with("[MOVE]"):
+	elif message.contains("[MOVE]"):
 		player.update_direction(player.match_string_direction(formatted_message(message)))
+	elif message.contains("[INFO]"):
+		log_message(message)
 	else:
 		print("[WARNING] message without tag : "+ message)
 

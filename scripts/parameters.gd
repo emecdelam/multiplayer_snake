@@ -1,7 +1,7 @@
 class_name Parameters
 
-@export var number_of_players = 5
 
+@export var number_of_players = 5
 
 # head, tail color
 @export var player_colors = [

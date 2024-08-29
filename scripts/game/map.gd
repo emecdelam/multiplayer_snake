@@ -147,27 +147,40 @@ func remove_player_pos(pos: Vector2, player: Player):
 
 ## A function to get the whole map state as a string
 func dump_map_state(player_a: Player, players: Array[Player]) -> String:
-	var ret = ""
+	var ret = []
+	var empty_color = param.empty_cell_color
+	var wall_color = param.wall_cell_color
+	var fruit_color = param.fruit_cell_color
+	var player_color = player_a.color
+	var player_tail_color = player_a.tail_color
+
 	for y in range(number_cell_y):
+		var row = []
 		for x in range(number_cell_x):
-			var cell_color = get_cell(Vector2(x,y)).color
-			match cell_color:
-				param.empty_cell_color:
-					ret += "0"
-				param.wall_cell_color:
-					ret += "2"
-				param.fruit_cell_color:
-					ret += "1"
-				player_a.color:
-					ret += "*"
-				_ :
-					if is_color_between(player_a.color, player_a.tail_color, cell_color):
-						ret += "-"
-					else:
-						ret += "_"
-			ret += ","
-		ret += ";"
-	ret = ret.erase(ret.length() - 2, 2)
+			var cell_color = get_cell(Vector2(x, y)).color
+			if cell_color == empty_color:
+				row.append("0")
+			elif cell_color == wall_color:
+				row.append("2")
+			elif cell_color == fruit_color:
+				row.append("1")
+			elif cell_color == player_color:
+				row.append("*")
+			elif is_color_between(player_color, player_tail_color, cell_color):
+				row.append("-")
+			else:
+				row.append("_")
+		
+		ret.append(",".join(row))
+	ret = ";".join(ret)
+	# player head part
+	ret += "|"
+	var player_states = []
+	for p in players:
+		if p.alive:
+			player_states.append(str(p.body[-1]))
+	ret += ",".join(player_states)
+
 	return ret
 
 

@@ -66,7 +66,7 @@ func _process(_delta):
 	if dead_count == param.number_of_players:
 		return
 
-	if dead_count == param.number_of_players -1: # 1 winner
+	if dead_count == param.number_of_players -1 and param.number_of_players > 1: # 1 winner
 		dead_count += 1
 		clean_game() # killing the last player
 		return
@@ -81,6 +81,7 @@ func _process(_delta):
 		
 	for i in range(len(servers)):
 		servers[i].send_message(map.dump_map_state(players[i], players))
+		#print(map.dump_map_state(players[i],players))
 	timer.start()
 	
 
@@ -151,7 +152,7 @@ func update_connection(server: Server):
 
 ## Function to create the porcesses related to the threads
 func start_threads():
-	for i in range(len(param.player_exec)):
+	for i in range(param.number_of_players):
 		var args = param.player_exec[i][1]
 		args.append(servers[i].PORT)
 		thread_manager.execute(i, param.player_exec[i][0], args)

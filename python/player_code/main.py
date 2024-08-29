@@ -1,11 +1,11 @@
 import sys
 import asyncio
 import websockets
-from logic import pick_a_move
+from logic.logic import pick_a_move
 
 
 # main loop
-async def client(uri, port):
+async def client(uri):
     try:
         # attempt a connection
         async with websockets.connect(uri) as websocket:
@@ -13,8 +13,8 @@ async def client(uri, port):
             await websocket.send(f"[START] Connection established with kiwi at : {port}")
             try:
                 async for message in websocket:
-                    if "[STOP]" in message:
-                        sys.exit(1)
+                    if "[STOP]" in message: # close the program to allow for clean threads close
+                        sys.exit(0)
                     await move(websocket, message)
 
             finally:
@@ -27,11 +27,11 @@ async def client(uri, port):
 async def move(websocket, message):
     # ============= your code for moving here =============
     direction = pick_a_move(message)
+    # =====================================================
     await websocket.send(f"[MOVE] {direction}") # you should return a move
 
 if __name__ == "__main__":
     print("Program started")
     # port is given as the first argument
     port = int(sys.argv[1]) if len(sys.argv) else print("No port given as argument")
-    uri = f"ws://localhost:{port}"
-    asyncio.run(client(uri, port))
+    asyncio.run(client(f"ws://localhost:{port}"))
