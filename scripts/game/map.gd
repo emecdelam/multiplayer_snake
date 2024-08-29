@@ -170,18 +170,17 @@ func dump_map_state(player_a: Player, players: Array[Player]) -> String:
 				player_a.color:
 					ret += "a"
 				_ :
-					
 					if is_color_between(player_a.color, player_a.tail_color, cell_color):
 						ret += "x,"
 						continue
 					var helper = dump_helper_analyse_player_array(players, cell_color)
 					if helper != "":
 						ret += helper
-					else:
-						print("[WARNING] unknown color : "+str(get_cell(Vector2(x,y))))
+					#else:
+					#	print("[WARNING] unknown color : "+str(get_cell(Vector2(x,y))))
 			ret += ","
 		ret += ";"
-
+	ret = ret.erase(ret.length() - 2, 2)
 	return ret
 
 ## A function to get the opposite of a dump, to avoid recalculing

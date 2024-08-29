@@ -2,7 +2,7 @@ class_name ThreadManager
 
 var threads: Array[Thread]
 var outputs: Array[Array]
-
+var background_thread := Thread.new()
 
 func _init(number:int):
 	for i in range(number):
@@ -12,6 +12,7 @@ func _init(number:int):
 
 ## Function to execute a command in a specific thread
 func execute(index: int, exec_path: String, exec_args: Array):
+	print("[INFO] appel vers un thread")
 	if index >= threads.size():
 		print("[WARNING] trying to execute with an index superior to the number of threads")
 		return
@@ -23,7 +24,13 @@ func execute(index: int, exec_path: String, exec_args: Array):
 	thread.start(exec_func)
 
 ## A function do print all outputs
-func dump_outputs():
+func dump_outputs() -> Thread:
 	print("[INFO] waiting for threads to finish dumping outputs")
-	for out in outputs:
-		print(out)
+	var dump = func() -> void:
+		for thread in threads:
+			thread.wait_to_finish()
+		print("[INFO] dumping outputs")
+		for out in outputs:
+			print("".join(out))
+	background_thread.start(dump)
+	return background_thread

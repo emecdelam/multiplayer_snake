@@ -9,8 +9,8 @@ extends Node2D
 @export var number_cell_y: int = 25
 
 @export var number_fruits: int = 5
-@export var number_walls: int = 0
-@export var player_length: int = 3
+@export var number_walls: int = 100
+@export var player_length: int = 5
 #--------------------------------------
 # ONREADY
 #--------------------------------------
@@ -36,40 +36,55 @@ func _ready():
 	# Initialize display
 	%name.text = param.player_names[0]
 	%name_2.text = param.player_names[1]
+	%name_3.text = param.player_names[2]
 	%score.add_to_group("score_labels")
 	%score.add_theme_color_override("font_color",param.player_colors[0][0])
+	if param.number_of_players > 2:
+		%score_3.add_to_group("score_labels")
+		%score_3.add_theme_color_override("font_color",param.player_colors[2][0])
 	if param.number_of_players > 1:
 		%score_2.add_to_group("score_labels")
 		%score_2.add_theme_color_override("font_color",param.player_colors[1][0])
-	else :
+	else:
 		%score_2.get_parent().hide()
+		%score_3.get_parent().hide()
 		print("[WARNING] only updating score for one player")
-	# Initialize map
+	# Game related starts
 	spawns = create_spawns(param.number_of_players)
 	create_map()
 	create_player()
-	create_servers()
 	timer  = get_parent().get_node("Timer")
 	map.generate_walls(number_walls, spawns)
+	# Connection related starts
+	create_servers()
+	start_threads()
 	
 
 	
 
 
 func _process(_delta):
-	for i in connections:
-		if not i: # Checks that every node is connected
-			return
-	if not timer.is_stopped():
+	if param.number_of_players < 1:
+		print("[WARNING] No player found")
+		return
+	if not timer.is_stopped(): # Check for game ticks
 		return
 	for player in players:
 		if not player.alive:
 			return
+	for i in connections:
+		if not i: # Checks that every node is connected
+			return
+
+
+	
 	for player in players:
 		var alive = player.move_snake(map)
 		if alive:
 			continue
 		handle_death_player(player)
+	for i in range(len(servers)):
+		servers[i].send_message(map.dump_map_state(players[i], players))
 	timer.start()
 	
 
@@ -124,6 +139,13 @@ func update_connection(server: Server):
 		if servers[i].PORT == server.PORT:
 			connections[i] = server.connected
 			break
+
+## Function to create the porcesses related to the threads
+func start_threads():
+	for i in range(len(param.player_exec)):
+		var args = param.player_exec[i][1]
+		args.append(servers[i].PORT)
+		thread_manager.execute(i, param.player_exec[i][0], args)
 
 
 ## Generates random spawn points for the {number} of players
@@ -185,4 +207,7 @@ func is_in_spawn_region(pos: Vector2, used_spawns: Array, distance: int) -> bool
 func handle_death_player(player: Player):
 	print("[INFO] Player died : "+player.name)
 	player.display_dead_body(map)
+	for server in servers:
+		server._exit_tree()
+	thread_manager.dump_outputs()#.wait_to_finish() # wait for the background thread to clean the other threads, it is done to avoid blocking the main thread
 	
