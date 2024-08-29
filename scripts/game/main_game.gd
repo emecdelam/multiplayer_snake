@@ -11,7 +11,7 @@ class_name Game
 
 @export var number_fruits: int = 5
 @export var number_walls: int = 100
-@export var player_length: int = 5
+@export var player_length: int = 3
 #--------------------------------------
 # ONREADY
 #--------------------------------------
