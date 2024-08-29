@@ -143,6 +143,8 @@ func match_string_direction(input: String) -> Direction:
 		
 ## Update direction
 func update_direction(dir: Direction):
+	if not alive:
+		return
 	direction = dir
 	
 ## Checks for user inputs, not usefull for ai

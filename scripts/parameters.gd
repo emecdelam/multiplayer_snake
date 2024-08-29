@@ -1,8 +1,6 @@
 class_name Parameters
 
 
-@export var number_of_players = 5
-
 # head, tail color
 @export var player_colors = [
     [Color("#72DF5C"), Color("#145815")],   # green

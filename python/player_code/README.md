@@ -1,4 +1,4 @@
-# Creating an ai pyton snake
+# Creating an ai snake
 
 
 ## Connection
@@ -11,12 +11,18 @@ if your program has to crash because it doesn't work properly, you can send a me
 
 and if your program has any other relevant info, for example not enough calculation time, you can send a message containing `"[INFO]"`
 
+there is a fully working ai in [python](main.py) (moves semi-randomly) 
 
 ## Inputs
 
 Every game update (by default 0.15s) the websockets send to each player a custom map with special characters :
 
-- First part
+
+> [!NOTE] : sending websockets takes time, it would be better if the response function was only taking 0.12 secs max
+> which can be done by using a background task to minimize the search area, since the snake only moves one cell at a time, 
+> there is a lower bound to the number of cell relevant to search for, this bound can be calculated while waiting for the new input from the game
+
+- First part : map
 
 `0` : empty cell
 
@@ -36,15 +42,16 @@ Every game update (by default 0.15s) the websockets send to each player a custom
 
 `|` : a char to separate the map from the second part
 
-- Second part (after `|`)
+- Second part : heads (after `|`)
 
 This part might not serve your AI, it contains the player heads position in this format
 
 `(12, 18)(26, 8)(22, 11)(15, 9)(7, 10)`
 
+
 where 18 is the index in the map ie: `map[18]` and 12 is the index of the element in that row ie `map[18][12]`
 
-example of code doing this :
+example of code parsing the map this :
 ```python
 msg = "..."
 input_map = msg.strip().split("|")[0]
@@ -56,8 +63,18 @@ for col in input_map.split(";"):
     parsed.append(line)
 ```
 
+example of code parsing the heads
+```python
+import re
+def parse_heads(input_string):
+    matches = re.findall(r'\((\d+), (\d+)\)', input_string)
+    tuple_list = [(int(x), int(y)) for x, y in matches]
+    return tuple_list
+```
 
-examples of inputs can be found in the [example](example_input.txt) file, it is data from a single player game of a 10x10 grid
+
+
+examples of inputs can be found in the [example](examples/) folder, there are real game data
 
 
 

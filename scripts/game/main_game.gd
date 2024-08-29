@@ -8,7 +8,7 @@ class_name Game
 @export var border_size: Vector2 = Vector2(5, 5)
 @export var number_cell_x: int = 35
 @export var number_cell_y: int = 25
-
+@export var number_of_players = 5
 @export var number_fruits: int = 25
 @export var number_walls: int = 100
 @export var player_length: int = 3
@@ -28,7 +28,7 @@ var spawns: Array[Array]
 var players: Array[Player]
 var servers: Array[Server]
 var param := Parameters.new()
-var thread_manager := ThreadManager.new(param.number_of_players)
+var thread_manager := ThreadManager.new(number_of_players)
 var connections: Array[bool] = []
 var dead_count: int = 0
 #--------------------------------------
@@ -42,7 +42,7 @@ func _ready():
 	create_score_displays()
 
 	# Game related starts
-	spawns = create_spawns(param.number_of_players)
+	spawns = create_spawns(number_of_players)
 	create_map()
 	create_player()
 	timer  = get_parent().get_node("timer")
@@ -56,17 +56,17 @@ func _ready():
 
 
 func _process(_delta):
-	if param.number_of_players < 1:
+	if number_of_players < 1:
 		print("[WARNING] No player found")
 		return
 
 	if not timer.is_stopped(): # Check for game ticks
 		return
 
-	if dead_count == param.number_of_players:
+	if dead_count == number_of_players:
 		return
 
-	if dead_count == param.number_of_players -1 and param.number_of_players > 1: # 1 winner
+	if dead_count == number_of_players -1 and number_of_players > 1: # 1 winner
 		dead_count += 1
 		clean_game() # killing the last player
 		return
@@ -81,7 +81,6 @@ func _process(_delta):
 		
 	for i in range(len(servers)):
 		servers[i].send_message(map.dump_map_state(players[i], players))
-		#print(map.dump_map_state(players[i],players))
 	timer.start()
 	
 
@@ -106,7 +105,7 @@ func create_map():
 
 ## Create the displays for the players
 func create_score_displays():
-	for i in range(param.number_of_players):
+	for i in range(number_of_players):
 		var display = player_display.instantiate()
 		var player_name = display.get_node("player_margin/player_v_container/name")
 		player_name.text = param.player_names[i]
@@ -121,9 +120,9 @@ func create_score_displays():
 ## Creates the players
 func create_player():
 	var labels = get_tree().get_nodes_in_group("score_labels")
-	if len(labels) < param.number_of_players:
+	if len(labels) < number_of_players:
 		print("[WARNING] there are less labels than players colors")
-	for i in range(param.number_of_players):
+	for i in range(number_of_players):
 		var player = Player.new()
 		player.initialize_player(spawns[i],param.player_colors[i], param.player_names[i], map, labels[i])
 		players.append(player)
@@ -135,7 +134,7 @@ func create_servers():
 	for port in range(34001, 34196 + 1):
 		available_ports.append(port)
 	available_ports.shuffle()
-	for i in range(param.number_of_players):
+	for i in range(number_of_players):
 		var server = Server.new()
 		randi_range(34001, 34196)
 		if not server.initialize_server(available_ports.pop_front(), self, players[i], console):
@@ -152,7 +151,7 @@ func update_connection(server: Server):
 
 ## Function to create the porcesses related to the threads
 func start_threads():
-	for i in range(param.number_of_players):
+	for i in range(number_of_players):
 		var args = param.player_exec[i][1]
 		args.append(servers[i].PORT)
 		thread_manager.execute(i, param.player_exec[i][0], args)
