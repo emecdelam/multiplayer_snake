@@ -8,8 +8,8 @@ class_name Parameters
     [Color("#72DF5C"), Color("#145815")],   # green
     [Color("#60ABDA"), Color("#294486")],   # blue
     [Color("#EEBC77"), Color("#FF760D")],   # orange
-    [Color('#FEB1C5'), Color("#FB6D93")],   # pink
-    [Color("#E79AFF"), Color("#B048D1")]    # purple
+    [Color("#E09D9F"), Color("#D0406D")],   # pink
+    [Color("#DAB6FF"), Color("#8A28A4")]    # purple
 ]
 
 
@@ -17,7 +17,7 @@ class_name Parameters
 
 @export var empty_cell_color = Color("#1a1a1a")
 @export var wall_cell_color = Color("#373737")
-@export var fruit_cell_color = Color("#AD3D17")
+@export var fruit_cell_color = Color("#C85A2F")
 
 ## commmand and arguments for the execution
 @export var player_exec := [["python3", ["python/player_code/main.py"]],

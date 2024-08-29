@@ -18,7 +18,6 @@ var tcp_server := TCPServer.new()
 var socket := WebSocketPeer.new()
 var player: Player
 var connected: bool = false
-var id: int
 var console: ServerConsole
 #--------------------------------------
 # Default functions
@@ -67,7 +66,7 @@ func initialize_server(port: int, node:Node, server_player:Player, cons: ServerC
 	return true
 
 func log_message(message: String) -> void:
-	console.add_message("[%s]  (%s) : %s\n" % [Time.get_time_string_from_system(), PORT, message], player.color)
+	console.add_message("[%s]  (%s) : \n%s\n" % [Time.get_time_string_from_system(), PORT, message], player.color)
 
 func send_message(message: String) -> void:
 	if socket.get_ready_state() == WebSocketPeer.STATE_OPEN:

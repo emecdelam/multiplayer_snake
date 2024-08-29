@@ -9,7 +9,7 @@ class_name Game
 @export var number_cell_x: int = 35
 @export var number_cell_y: int = 25
 
-@export var number_fruits: int = 5
+@export var number_fruits: int = 25
 @export var number_walls: int = 100
 @export var player_length: int = 3
 #--------------------------------------
@@ -34,6 +34,9 @@ var dead_count: int = 0
 #--------------------------------------
 # Default functions
 #--------------------------------------
+func _init():
+	pass
+
 func _ready():
 	# Initialize display
 	create_score_displays()
@@ -60,10 +63,16 @@ func _process(_delta):
 	if not timer.is_stopped(): # Check for game ticks
 		return
 
-	if dead_count + 1 >= param.number_of_players: # 1 winner
+	if dead_count == param.number_of_players:
 		return
 
+	if dead_count == param.number_of_players -1: # 1 winner
+		dead_count += 1
+		clean_game() # killing the last player
+		return
 
+	if connections.count(false) != dead_count: # players not connected but game initialized
+		return
 
 	
 	for player in players:
@@ -213,18 +222,18 @@ func handle_death_player(player: Player):
 			server.log_message("[STOP] Stopped connection")
 			server._exit_tree()
 			update_connection(server)
-	if dead_count + 1 >= param.number_of_players: # 1 winner
-		clean_game()
+
 	
 
 
 
 ## Function called when there is only one survivir
 func clean_game():
-	for server in servers:
-		if server.connected:
-			server.log_message("[STOP] Stopped connection")
-			server._exit_tree()
+	for i in range(len(servers)):
+		if servers[i].connected:
+			servers[i].log_message("[STOP] Stopped connection")
+			servers[i].log_message("[INFO] Winner is : "+ str(servers[i].player.name))
+			servers[i]._exit_tree()
 
 	thread_manager.dump_outputs()#.wait_to_finish() # wait for the background thread to clean the other threads, it is done to avoid blocking the main thread
 	print("[INFO] game cleaned")

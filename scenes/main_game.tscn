@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://bujagclxbif11"]
+[gd_scene load_steps=7 format=3 uid="uid://bujagclxbif11"]
 
 [ext_resource type="Script" path="res://scripts/game/main_game.gd" id="1_c2hxe"]
 [ext_resource type="Script" path="res://scripts/communication/text_console.gd" id="2_550nc"]
@@ -11,6 +11,8 @@ bg_color = Color(0.278431, 0.278431, 0.278431, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w2xjl"]
 bg_color = Color(0.0666667, 0.0666667, 0.0666667, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tfurm"]
 
 [node name="GUI" type="Control"]
 layout_mode = 3
@@ -75,7 +77,6 @@ metadata/_edit_use_anchors_ = true
 [node name="game_container" type="Node2D" parent="main_panel/main_margin/main_h_container/game_panel"]
 position = Vector2(1, 0)
 script = ExtResource("1_c2hxe")
-number_fruits = 30
 
 [node name="timer" type="Timer" parent="main_panel/main_margin/main_h_container/game_panel"]
 wait_time = 0.15
@@ -87,6 +88,23 @@ custom_minimum_size = Vector2(50, 350)
 layout_mode = 2
 script = ExtResource("2_550nc")
 
+[node name="HBoxContainer" type="HBoxContainer" parent="main_panel/main_margin/main_h_container/console"]
+custom_minimum_size = Vector2(350, 0)
+layout_mode = 2
+
+[node name="hide" type="Label" parent="main_panel/main_margin/main_h_container/console/HBoxContainer"]
+layout_mode = 2
+text = "Hide connections"
+
+[node name="hide_box" type="CheckButton" parent="main_panel/main_margin/main_h_container/console/HBoxContainer"]
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_tfurm")
+
 [node name="websockets" type="Label" parent="main_panel/main_margin/main_h_container/console"]
 layout_mode = 2
 text = "WebSockets :"
+
+[node name="label_container" type="VBoxContainer" parent="main_panel/main_margin/main_h_container/console"]
+layout_mode = 2
+
+[connection signal="toggled" from="main_panel/main_margin/main_h_container/console/HBoxContainer/hide_box" to="main_panel/main_margin/main_h_container/console" method="_on_hide_box_toggled"]
