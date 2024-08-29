@@ -1,5 +1,6 @@
 extends Node2D
 
+class_name Game
 #--------------------------------------
 # EXPORTS
 #--------------------------------------
@@ -16,6 +17,7 @@ extends Node2D
 #--------------------------------------
 @onready var panel_position: Vector2 = position
 @onready var cell: Resource = preload("res://scenes/cell.tscn")
+@onready var player_display = preload("res://scenes/player_display.tscn")
 @onready var console: ServerConsole = %console
 #--------------------------------------
 # GLOBAL VAR
@@ -28,32 +30,19 @@ var servers: Array[Server]
 var param := Parameters.new()
 var thread_manager := ThreadManager.new(param.number_of_players)
 var connections: Array[bool] = []
-
+var dead_count: int = 0
 #--------------------------------------
 # Default functions
 #--------------------------------------
 func _ready():
 	# Initialize display
-	%name.text = param.player_names[0]
-	%name_2.text = param.player_names[1]
-	%name_3.text = param.player_names[2]
-	%score.add_to_group("score_labels")
-	%score.add_theme_color_override("font_color",param.player_colors[0][0])
-	if param.number_of_players > 2:
-		%score_3.add_to_group("score_labels")
-		%score_3.add_theme_color_override("font_color",param.player_colors[2][0])
-	if param.number_of_players > 1:
-		%score_2.add_to_group("score_labels")
-		%score_2.add_theme_color_override("font_color",param.player_colors[1][0])
-	else:
-		%score_2.get_parent().hide()
-		%score_3.get_parent().hide()
-		print("[WARNING] only updating score for one player")
+	create_score_displays()
+
 	# Game related starts
 	spawns = create_spawns(param.number_of_players)
 	create_map()
 	create_player()
-	timer  = get_parent().get_node("Timer")
+	timer  = get_parent().get_node("timer")
 	map.generate_walls(number_walls, spawns)
 	# Connection related starts
 	create_servers()
@@ -69,20 +58,21 @@ func _process(_delta):
 		return
 	if not timer.is_stopped(): # Check for game ticks
 		return
-	for player in players:
-		if not player.alive:
-			return
+
+	if dead_count + 1 >= param.number_of_players: # 1 winner
+		return
+
 	for i in connections:
 		if not i: # Checks that every node is connected
+			#print("[WARNING] Player nor connected")
 			return
 
 
 	
 	for player in players:
-		var alive = player.move_snake(map)
-		if alive:
-			continue
-		handle_death_player(player)
+		player.move_snake(map, self)
+
+		
 	for i in range(len(servers)):
 		servers[i].send_message(map.dump_map_state(players[i], players))
 	timer.start()
@@ -92,6 +82,7 @@ func _process(_delta):
 #--------------------------------------
 # Custom functions
 #--------------------------------------
+
 
 
 ## Creates the map
@@ -106,7 +97,17 @@ func create_map():
 	map.generate_fruits(number_fruits)
 
 
+## Create the displays for the players
+func create_score_displays():
+	for i in range(param.number_of_players):
+		var display = player_display.instantiate()
+		display.get_node("player_margin/player_v_container/name").text = param.player_names[i]
+		var score = display.get_node("player_margin/player_v_container/score")
+		score.add_to_group("score_labels")
+		score.add_theme_color_override("font_color",param.player_colors[i][0])
+		%display_v_container.add_child(display)
 
+	
 
 ## Creates the players
 func create_player():
@@ -146,6 +147,7 @@ func start_threads():
 		var args = param.player_exec[i][1]
 		args.append(servers[i].PORT)
 		thread_manager.execute(i, param.player_exec[i][0], args)
+
 
 
 ## Generates random spawn points for the {number} of players
@@ -205,9 +207,9 @@ func is_in_spawn_region(pos: Vector2, used_spawns: Array, distance: int) -> bool
 
 ## Handles the death of any player
 func handle_death_player(player: Player):
+	dead_count += 1
 	print("[INFO] Player died : "+player.name)
 	player.display_dead_body(map)
 	for server in servers:
 		server._exit_tree()
 	thread_manager.dump_outputs()#.wait_to_finish() # wait for the background thread to clean the other threads, it is done to avoid blocking the main thread
-	

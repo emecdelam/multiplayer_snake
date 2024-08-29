@@ -6,7 +6,7 @@ class_name Parameters
 @export var player_colors = [
     [Color("#72DF5C"), Color("#145815")],
     [Color("#60ABDA"), Color("#294486")],
-    [Color("#EEBC77"), Color("#E5933F")] 
+    [Color("#EEBC77"), Color("#FF760D")] 
 ]
 
 

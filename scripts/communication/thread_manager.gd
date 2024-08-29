@@ -12,7 +12,7 @@ func _init(number:int):
 
 ## Function to execute a command in a specific thread
 func execute(index: int, exec_path: String, exec_args: Array):
-	print("[INFO] appel vers un thread")
+	print("[INFO] Creating processes for threads")
 	if index >= threads.size():
 		print("[WARNING] trying to execute with an index superior to the number of threads")
 		return
@@ -25,7 +25,6 @@ func execute(index: int, exec_path: String, exec_args: Array):
 
 ## A function do print all outputs
 func dump_outputs() -> Thread:
-	print("[INFO] waiting for threads to finish dumping outputs")
 	var dump = func() -> void:
 		for thread in threads:
 			thread.wait_to_finish()

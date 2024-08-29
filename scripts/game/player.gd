@@ -55,7 +55,7 @@ func initialize_player(coordinates:Array, panel_colors: Array, player_name: Stri
 
 
 ## The function moving the snake returns false if the snake dies
-func move_snake(map: Map) -> bool:
+func move_snake(map: Map, game: Game) -> bool:
 	if not alive:
 		return false
 	var snake_head: Vector2 = body[-1]
@@ -64,6 +64,7 @@ func move_snake(map: Map) -> bool:
 	# Collides
 	if map.check_player_collision(new_snake_pos):
 		alive = false
+		game.handle_death_player(self)
 		return false
 	old_direction = direction
 	body.append(new_snake_pos)
