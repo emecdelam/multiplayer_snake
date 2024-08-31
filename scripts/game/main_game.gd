@@ -8,7 +8,7 @@ class_name Game
 @export var border_size: Vector2 = Vector2(5, 5)
 @export var number_cell_x: int = 35
 @export var number_cell_y: int = 25
-@export var number_of_players = 5
+@export var number_of_players = 6
 @export var number_fruits: int = 25
 @export var number_walls: int = 100
 @export var player_length: int = 3
