@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://dmee1ayniffg3"]
+
+[ext_resource type="Script" path="res://scripts/game/cell.gd" id="1_834iv"]
+
+[node name="ColorRect" type="ColorRect"]
+custom_minimum_size = Vector2(2, 2)
+offset_right = 40.0
+offset_bottom = 40.0
+color = Color(0.215686, 0.215686, 0.215686, 1)
+script = ExtResource("1_834iv")

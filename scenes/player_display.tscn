@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://cytim0ssld1dj"]
+
+[node name="panel" type="Panel"]
+custom_minimum_size = Vector2(100, 100)
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 112.0
+offset_bottom = 120.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="player_margin" type="MarginContainer" parent="."]
+custom_minimum_size = Vector2(50, 100)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 0
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="player_v_container" type="VBoxContainer" parent="player_margin"]
+layout_mode = 2
+alignment = 1
+
+[node name="name" type="Label" parent="player_margin/player_v_container"]
+layout_mode = 2
+
+[node name="score" type="Label" parent="player_margin/player_v_container"]
+layout_mode = 2
+text = "0"
